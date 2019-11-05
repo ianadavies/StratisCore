@@ -1,8 +1,8 @@
 <section id="GUI" class="light">
   <section id="content" class="light col-10 mx-auto">
     <div class="row">
-      <div class="col" *ngIf="(walletHistory | async)">
-        <app-transactions *ngIf="transactionCount > 0; else noTransactions" [enablePagination]="true"
+      <div class="col">
+        <app-transactions [enablePagination]="true"
                           title="Transaction History"></app-transactions>
       </div>
     </div>

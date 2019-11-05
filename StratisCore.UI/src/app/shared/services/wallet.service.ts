@@ -9,12 +9,11 @@ import {
   WalletHistory, WalletNamesData
 } from '@shared/services/interfaces/api.i';
 import {
-  BlockConnectedSignalREvent,
   SignalREvent,
   SignalREvents,
   WalletInfoSignalREvent
 } from '@shared/services/interfaces/signalr-events.i';
-import { catchError, map, flatMap, tap, debounceTime } from 'rxjs/operators';
+import { catchError, map, flatMap, tap } from 'rxjs/operators';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { RestApi } from '@shared/services/rest-api';
 import { GlobalService } from '@shared/services/global.service';
@@ -26,7 +25,7 @@ import { FeeEstimation } from '@shared/models/fee-estimation';
 import { CurrentAccountService } from '@shared/services/current-account.service';
 import { WalletLoad } from '@shared/models/wallet-load';
 import { WalletResync } from '@shared/models/wallet-rescan';
-import { AddressBalance } from "@shared/models/address-balance";
+import { AddressBalance } from '@shared/models/address-balance';
 
 @Injectable({
   providedIn: 'root'
@@ -141,6 +140,13 @@ export class WalletService extends RestApi {
     return this.getWalletHistorySubject(this.currentWallet).asObservable();
   }
 
+  public getTransactionCount(): Observable<number> {
+    return this.get<any>('wallet/transactionCount', this.getWalletParams(this.currentWallet))
+      .pipe(map(result => {
+        return result.transactionCount as number;
+      }), catchError(err => this.handleHttpError(err)));
+  }
+
   public estimateFee(feeEstimation: FeeEstimation): Observable<any> {
     // TODO: What is the intrinsic link between Smart Contacts and Accounts Enabled?
     if (this.accountsEnabled) {
@@ -161,8 +167,45 @@ export class WalletService extends RestApi {
     }
   }
 
-  private getWalletHistory(data: WalletInfo): Observable<WalletHistory> {
-    let extra = null;
+  public getWalletHistoryPaginated(take?: number, prevOutputTxTime?: number, prevOutputIndex?: number): Observable<TransactionsHistoryItem[]> {
+    let extra = {};
+
+    if (take) {
+      extra = Object.assign(extra, {
+        prevOutputTxTime: prevOutputTxTime,
+        prevOutputIndex: prevOutputIndex,
+        take: take
+      });
+    }
+
+    if (this.accountsEnabled) {
+      if (!this.currentAccountService.address) {
+        return of(<TransactionsHistoryItem[]>[]);
+      }
+
+      extra = Object.assign(extra, {
+        address: this.currentAccountService.address
+      });
+    }
+
+    return this.get<WalletHistory>('wallet/history',
+      this.getWalletParams(this.currentWallet, extra)).pipe(map((response) => {
+        return response.history[this.currentWallet.account].transactionsHistory;
+      }),
+      catchError(err => this.handleHttpError(err)));
+  }
+
+  public getWalletHistory(data: WalletInfo, prevOutputTxTime?: number, prevOutputIndex?: number, take?: number): Observable<WalletHistory> {
+    const extra = {};
+
+    if (prevOutputIndex) {
+      Object.assign(extra, {
+        prevOutputTxTime: prevOutputTxTime,
+        prevOutputIndex: prevOutputIndex,
+        take: take
+      });
+    }
+
     if (this.accountsEnabled) {
       if (!this.currentAccountService.address) {
         return of(<WalletHistory>{
@@ -170,9 +213,9 @@ export class WalletService extends RestApi {
         });
       }
 
-      extra = {
+      Object.assign(extra, {
         address: this.currentAccountService.address
-      };
+      });
     }
 
     return this.get<WalletHistory>('wallet/history', this.getWalletParams(data, extra)).pipe(
@@ -259,7 +302,11 @@ export class WalletService extends RestApi {
       .set('accountName', `account ${walletInfo.account || 0}`);
 
     if (extra) {
-      Object.keys(extra).forEach(key => params = params.set(key, extra[key]));
+      Object.keys(extra).forEach(key => {
+        if (extra[key] != null) {
+          params = params.set(key, extra[key]);
+        }
+      });
     }
     return params;
   }

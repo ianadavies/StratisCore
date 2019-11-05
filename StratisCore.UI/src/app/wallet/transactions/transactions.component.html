@@ -4,7 +4,7 @@
     <div class="card-body">
       <table class="table table-sm">
         <tbody>
-        <tr *ngFor="let _transaction of _transactions | paginate: { itemsPerPage: 10, currentPage: pageNumber }">
+        <tr *ngFor="let _transaction of _transactions | paginate: { itemsPerPage: 10, currentPage: pageNumber, totalItems: transactionCount }">
           <th class="text-center">
             <span class="bubble"
                   [ngClass]="{
@@ -22,7 +22,7 @@
         </tr>
         </tbody>
       </table>
-      <pagination-controls *ngIf="enablePagination" (pageChange)="pageNumber = $event"></pagination-controls>
+      <pagination-controls *ngIf="enablePagination" (pageChange)="onPageChanged($event)"></pagination-controls>
       <div *ngIf="enableShowHistoryButton" class="text-center my-2">
         <button type="button" class="btn btn-outline-primary"
                 [class.btn-outline-stratis-green]="globalService.getSidechainEnabled()" (click)="goToHistory()">

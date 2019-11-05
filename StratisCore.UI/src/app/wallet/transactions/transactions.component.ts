@@ -5,7 +5,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { GlobalService } from '@shared/services/global.service';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { WalletService } from '@shared/services/wallet.service';
 
 @Component({
@@ -14,8 +14,15 @@ import { WalletService } from '@shared/services/wallet.service';
   styleUrls: ['./transactions.component.css']
 })
 export class TransactionsComponent implements OnInit {
+  private transactionCount: number;
+  private prevOutputTxTime: number;
+  private prevOutputIndex: number;
+  public currentPage: number;
+
+  protected pageCount: number;
   public transactions: Observable<TransactionInfo[]>;
   @Input() public enablePagination: boolean;
+  @Input() public itemsPerPage = 10;
   @Input() public enableShowHistoryButton: boolean;
   @Input() public maxTransactionCount: number;
   @Input() public title: string;
@@ -30,18 +37,31 @@ export class TransactionsComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.transactions = this.walletService.walletHistory()
-      .pipe(map((historyItems => {
-        return (null != historyItems && historyItems.length > 0)
-          ? TransactionInfo.mapFromTransactionsHistoryItems(historyItems, this.maxTransactionCount)
-          : null;
-      })));
+    this.walletService.getTransactionCount().toPromise().then(result => {
+      this.transactionCount = result;
+      this.pageCount = Math.ceil(result / this.itemsPerPage);
+      this.onPageChanged(1);
+    });
   }
 
   public openTransactionDetailDialog(transaction: TransactionInfo): void {
     this.rowClicked.emit(transaction);
     const modalRef = this.modalService.open(TransactionDetailsComponent, {backdrop: 'static', keyboard: false});
     modalRef.componentInstance.transaction = transaction;
+  }
+
+  public onPageChanged(page: number): void {
+    this.transactions = this.walletService.getWalletHistoryPaginated(Math.max((page - this.pageNumber) * 10, 10),
+      this.prevOutputTxTime, this.prevOutputIndex)
+      .pipe(map((historyItems => {
+        return (null != historyItems && historyItems.length > 0)
+          ? TransactionInfo.mapFromTransactionsHistoryItems(historyItems, this.maxTransactionCount)
+          : null;
+      })), tap(response => {
+        this.prevOutputIndex = 1;
+        this.prevOutputTxTime = response[response.length - 1].transactionTimestamp;
+      }));
+    this.pageNumber = page;
   }
 
   public goToHistory(): Promise<boolean> {

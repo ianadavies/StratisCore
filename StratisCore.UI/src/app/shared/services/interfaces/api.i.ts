@@ -1,5 +1,4 @@
-import { Log } from "../../../wallet/tokens/services/logger.service";
-import { add } from "ngx-bootstrap/chronos";
+import { Log } from '../../../wallet/tokens/services/logger.service';
 
 export interface WalletNamesData {
   walletNames: Array<string>;
@@ -106,6 +105,7 @@ export interface TransactionsHistoryItem {
   payments: any[];
   confirmedInBlock: number;
   timestamp: number;
+  ttOutputIndex: number;
   blockIndex: number;
   fee: number;
 }
