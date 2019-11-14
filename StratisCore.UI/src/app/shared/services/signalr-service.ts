@@ -88,6 +88,10 @@ export class SignalRService extends RestApi implements ISignalRService {
     });
   }
 
+  public sendMessage(targetFeature: string,  ...args: any[]): Promise<void> {
+    return this.connection.send(targetFeature, args);
+  }
+
   private executeMessageReceivedHandlers(message: any): void {
     this.onMessageReceivedHandlers.forEach(handler => {
       if (message.nodeEventType) {

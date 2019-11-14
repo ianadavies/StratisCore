@@ -57,6 +57,9 @@ export class WalletService extends RestApi {
       this.accountsEnabled = globalService.getSidechainEnabled();
       if (null != address) {
         this.updateWalletForCurrentAddress();
+        signalRService.sendMessage('WalletFeature', {
+          currentAddress: address
+        });
       }
     });
 
