@@ -24,9 +24,6 @@ export interface SignalRMessageHandler {
   providedIn: 'root'
 })
 export class SignalRService extends RestApi implements ISignalRService {
-
-  private balance = 1000;
-
   constructor(http: HttpClient,
               globalService: GlobalService,
               errorService: ErrorService) {
