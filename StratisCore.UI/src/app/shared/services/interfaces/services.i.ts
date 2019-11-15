@@ -9,6 +9,8 @@ import { TokenBalanceRequest } from '../../../wallet/tokens/models/token-balance
 
 export interface ISignalRService {
   connect(hubName: string): void;
+
+  registerOnMessageEventHandler<TMessage>(messageType: string, onEventMessageReceivedHandler: (message: TMessage) => void): void;
 }
 
 export interface IApiService {
