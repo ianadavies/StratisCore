@@ -88,8 +88,11 @@ export class SignalRService extends RestApi implements ISignalRService {
     });
   }
 
-  public sendMessage(targetFeature: string,  ...args: any[]): Promise<void> {
-    return this.connection.send(targetFeature, args);
+  public sendMessage(target: string, args: any): Promise<void> {
+    return this.connection.send('SendMessage', {
+      target: target,
+      args: args
+    });
   }
 
   private executeMessageReceivedHandlers(message: any): void {

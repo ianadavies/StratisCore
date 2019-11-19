@@ -9,12 +9,11 @@ import {
   WalletHistory, WalletNamesData
 } from '@shared/services/interfaces/api.i';
 import {
-  BlockConnectedSignalREvent,
   SignalREvent,
   SignalREvents,
   WalletInfoSignalREvent
 } from '@shared/services/interfaces/signalr-events.i';
-import { catchError, map, flatMap, tap, debounceTime } from 'rxjs/operators';
+import { catchError, map, flatMap, tap} from 'rxjs/operators';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { RestApi } from '@shared/services/rest-api';
 import { GlobalService } from '@shared/services/global.service';
@@ -26,7 +25,7 @@ import { FeeEstimation } from '@shared/models/fee-estimation';
 import { CurrentAccountService } from '@shared/services/current-account.service';
 import { WalletLoad } from '@shared/models/wallet-load';
 import { WalletResync } from '@shared/models/wallet-rescan';
-import { AddressBalance } from "@shared/models/address-balance";
+import { AddressBalance } from '@shared/models/address-balance';
 
 @Injectable({
   providedIn: 'root'
@@ -51,13 +50,19 @@ export class WalletService extends RestApi {
 
     globalService.currentWallet.subscribe(wallet => {
       this.currentWallet = wallet;
+      if (wallet) {
+        signalRService.sendMessage('WalletInfoBroadcaster', {
+          currentWallet: wallet.walletName,
+          currentAccount: wallet.account
+        });
+      }
     });
 
     currentAccountService.currentAddress.subscribe((address) => {
       this.accountsEnabled = globalService.getSidechainEnabled();
       if (null != address) {
         this.updateWalletForCurrentAddress();
-        signalRService.sendMessage('WalletFeature', {
+        signalRService.sendMessage('WalletInfoBroadcaster', {
           currentAddress: address
         });
       }
