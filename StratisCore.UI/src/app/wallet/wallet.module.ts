@@ -40,6 +40,9 @@ import { AddressBookCardComponent } from './address-book-card/address-book-card.
 import { AddNodeComponent } from './advanced/components/add-node/add-node.component';
 import { TransactionDetailsModalComponent } from './transaction-details-modal/transaction-details-modal.component';
 import { AccountSidebarItem } from './side-bar-items/account-sidebar-item';
+import { GlobalService } from '@shared/services/global.service';
+import { SmartContractsComponent } from './smart-contracts/components/smart-contracts.component';
+import { TokensComponent } from './tokens/components/tokens.component';
 
 @NgModule({
   imports: [
@@ -82,7 +85,7 @@ import { AccountSidebarItem } from './side-bar-items/account-sidebar-item';
   ],
   providers: [
     AccountSelectedGuard,
-    { provide: ColdStakingServiceBase, useClass: FakeColdStakingService },
+    {provide: ColdStakingServiceBase, useClass: FakeColdStakingService},
     AccountSidebarItem,
     StakingSidebarItem
   ],
@@ -102,9 +105,11 @@ import { AccountSidebarItem } from './side-bar-items/account-sidebar-item';
 })
 
 export class WalletModule {
-  constructor(private sidebarItems: SideBarItemsProvider,
-              accountSidebarItem: AccountSidebarItem,
-              stakingSidebarItem: StakingSidebarItem) {
+  constructor(
+    private globalService: GlobalService,
+    private sidebarItems: SideBarItemsProvider,
+    accountSidebarItem: AccountSidebarItem,
+    stakingSidebarItem: StakingSidebarItem) {
 
     sidebarItems.registerSideBarItem(accountSidebarItem);
 
@@ -119,14 +124,25 @@ export class WalletModule {
     sidebarItems.registerSideBarItem(new SimpleSideBarItem(
       'Contacts', '/wallet/address-book', ['side-bar-item-address']));
 
-    // sidebarItems.registerSideBarItem(new SimpleSideBarItem(
-    //   'Explorer', '/wallet/explorer', ['side-bar-item-explorer']));
+    if (globalService.getSidechainEnabled()) {
+      sidebarItems.registerSideBarItem(new SimpleSideBarItem(
+        'Tokens', '/wallet/tokens', ['side-bar-item-tokens']));
+
+      sidebarItems.registerSideBarItem(new SimpleSideBarItem(
+        'Smart Contracts', '/wallet/smart-contracts', ['side-bar-item-smart-contracts']));
+
+      sidebarItems.registerSideBarItem(new SimpleSideBarItem(
+        'Contract Editor', '/wallet/contracts-editor', ['side-bar-item-contract-editor']));
+
+    }
 
     sidebarItems.registerSideBarItem(new SimpleSideBarItem(
       'Advanced', '/wallet/advanced', ['side-bar-item-advanced']));
 
+
+
     sidebarItems.setSelected({
-      route : '/wallet/dashboard'
+      route: '/wallet/dashboard'
     } as SideBarItem);
   }
 }

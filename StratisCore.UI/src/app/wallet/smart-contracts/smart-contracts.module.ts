@@ -12,36 +12,45 @@ import { SharedModule } from '@shared/shared.module';
 import { ScBalanceComponent } from './components/balance/balance.component';
 import { ContractTypePipe } from './components/contract-type.pipe';
 import { AddressSelectionComponent } from './components/address-selection/address-selection.component';
-import { SmartContractsServiceBase } from "./smart-contracts-service.base";
+import { SmartContractsServiceBase } from './smart-contracts-service.base';
+import { ContractEditorComponent } from './components/contract-editor/contract-editor.component';
+import { AngularMonacoEditorModule } from 'angular-monaco-editor';
 
 @NgModule({
-    imports: [
-        CommonModule, NgbModalModule, ClipboardModule, FormsModule, ReactiveFormsModule, SharedModule
-    ],
+  imports: [
+    CommonModule,
+    NgbModalModule,
+    ClipboardModule,
+    FormsModule,
+    ReactiveFormsModule,
+    SharedModule,
+    AngularMonacoEditorModule.forRoot()
+  ],
 
-    providers: [{ provide: SmartContractsServiceBase, useClass: SmartContractsService }],
-    exports: [
-        ScBalanceComponent
-    ],
-    declarations: [
-        SmartContractsComponent,
-        TransactionComponent,
-        ScBalanceComponent,
-        ContractTypePipe,
-        AddressSelectionComponent
-    ],
+  providers: [{provide: SmartContractsServiceBase, useClass: SmartContractsService}],
+  exports: [
+    ScBalanceComponent
+  ],
+  declarations: [
+    SmartContractsComponent,
+    TransactionComponent,
+    ScBalanceComponent,
+    ContractTypePipe,
+    AddressSelectionComponent,
+    ContractEditorComponent
+  ],
 
-    entryComponents: [
-        TransactionComponent, AddNewAddressComponent
-    ]
+  entryComponents: [
+    TransactionComponent, AddNewAddressComponent
+  ]
 })
 export class SmartContractsModule {
-    static forRoot(): ModuleWithProviders {
-        return {
-          ngModule: SmartContractsModule,
-          providers: [
-            { provide: SmartContractsServiceBase, useClass: SmartContractsService }
-          ]
-        };
-    }
+  static forRoot(): ModuleWithProviders {
+    return {
+      ngModule: SmartContractsModule,
+      providers: [
+        {provide: SmartContractsServiceBase, useClass: SmartContractsService}
+      ]
+    };
+  }
 }

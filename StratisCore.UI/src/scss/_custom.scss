@@ -2141,6 +2141,18 @@ app-side-bar {
     .side-bar-item-advanced:before {
       content: "\e810";
     }
+
+    .side-bar-item-tokens:before {
+      content: "\e814";
+    }
+
+    .side-bar-item-smart-contracts:before {
+      content: "\e86b";
+    }
+
+    .side-bar-item-contract-editor:before {
+      content: "\e86a";
+    }
   }
 }
 
@@ -2232,6 +2244,10 @@ app-task-bar {
     background: $sidebar-gradient-side-chain;
   }
 
+  .text-primary {
+    color: $stratis-green;
+  }
+
   .notify-snack-bar {
     background: $sidebar-gradient-side-chain;
   }
@@ -2241,4 +2257,5 @@ app-task-bar {
     background-color: $stratis-green;
     border-color: $stratis-green;
   }
+
 }

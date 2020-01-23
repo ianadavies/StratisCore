@@ -16,6 +16,7 @@ import { AccountSelectedGuard } from '@shared/guards/account-selected.guard';
 import { ReceiveComponent } from './receive/receive.component';
 import { SendComponent } from './send/send.component';
 import { BlockExplorerComponent } from './block-explorer/block-explorer.component';
+import { ContractEditorComponent } from './smart-contracts/components/contract-editor/contract-editor.component';
 
 const routes: Routes = [
   {
@@ -38,6 +39,7 @@ const routes: Routes = [
       },
       {path: 'smart-contracts', component: SmartContractsComponent, canActivate: [AccountSelectedGuard]},
       {path: 'tokens', component: TokensComponent, canActivate: [AccountSelectedGuard]},
+      {path: 'contract-editor', component: ContractEditorComponent, canActivate: [AccountSelectedGuard]},
       {path: 'address-book', component: AddressBookComponent},
       {path: 'explorer', component: BlockExplorerComponent}
     ]
