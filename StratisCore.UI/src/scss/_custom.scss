@@ -895,10 +895,10 @@ img {
   font-size: 0.9em;
 }
 
+
 ////// LOGIN
 #login {
   height: 100vh;
-  background: $sidebar-gradient;
   color: white;
 
   .login {
@@ -927,6 +927,13 @@ img {
   }
 }
 
+.gradient-background {
+  background: $sidebar-gradient;
+}
+
+.gradient-background.sidechain {
+  background: $sidebar-gradient-side-chain;
+}
 
 .left-login {
   height: 100vh;
@@ -2135,8 +2142,8 @@ app-side-bar {
       content: "\e810";
     }
   }
-
 }
+
 
 .send-form {
   max-width: 600px;
@@ -2218,4 +2225,20 @@ app-task-bar {
 
 ::-webkit-scrollbar {
   display: none;
+}
+
+.sidechain {
+  app-side-bar {
+    background: $sidebar-gradient-side-chain;
+  }
+
+  .notify-snack-bar {
+    background: $sidebar-gradient-side-chain;
+  }
+
+  .btn-primary {
+    color: #fff;
+    background-color: $stratis-green;
+    border-color: $stratis-green;
+  }
 }
