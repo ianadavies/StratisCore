@@ -24,7 +24,7 @@ import { AngularMonacoEditorModule } from 'angular-monaco-editor';
     FormsModule,
     ReactiveFormsModule,
     SharedModule,
-    AngularMonacoEditorModule.forRoot()
+  //  AngularMonacoEditorModule.forRoot()
   ],
 
   providers: [{provide: SmartContractsServiceBase, useClass: SmartContractsService}],

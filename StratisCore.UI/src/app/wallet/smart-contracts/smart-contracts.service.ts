@@ -4,7 +4,7 @@ import { BehaviorSubject, Observable, of } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { GlobalService } from '@shared/services/global.service';
 import { ErrorService } from '@shared/services/error-service';
-import { catchError} from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { TokenBalanceRequest } from '../tokens/models/token-balance-request';
 import { LocalExecutionResult } from '@shared/models/local-execution-result';
 import { SmartContractsServiceBase } from './smart-contracts-service.base';
@@ -18,9 +18,19 @@ export class SmartContractsContractItem {
   }
 }
 
+export enum ContractItemType {
+  Received = 0,
+  Sent = 1,
+  Staked = 2,
+  Call = 3,
+  Create = 4,
+  GasRefund = 5
+}
+
+
 export interface ContractTransactionItem {
   blockHeight: number;
-  type: number;
+  type: ContractItemType;
   hash: string;
   to: string;
   amount: number;
@@ -34,6 +44,7 @@ export class SmartContractsService extends ApiService implements SmartContractsS
   private currentWallet: WalletInfo;
   private lastBalance: number = null;
   private currentAddress: string;
+
   constructor(
     httpClient: HttpClient,
     globalService: GlobalService,
@@ -131,15 +142,13 @@ export class SmartContractsService extends ApiService implements SmartContractsS
     );
   }
 
-  GetContracts(walletName: string): Observable<SmartContractsContractItem[]> {
-    return of([
-      new SmartContractsContractItem('7809', 'Transfer', 'bbdbcae72f1085710', 'SdrP9wvxZmaG7t3UAjxxyB6RNT9FV1Z2Sn', 10898025),
-      new SmartContractsContractItem('7810', 'Transfer', 'bbdbcae72f1085710', 'SdrP9wvxZmaG7t3UAjxxyB6RNT9FV1Z2Sn', 11898025),
-      new SmartContractsContractItem('7811', 'Transfer', 'bbdbcae72f1085710', 'SdrP9wvxZmaG7t3UAjxxyB6RNT9FV1Z2Sn', 12898025),
-      new SmartContractsContractItem('7812', 'Transfer', 'bbdbcae72f1085710', 'SdrP9wvxZmaG7t3UAjxxyB6RNT9FV1Z2Sn', 13898025),
-      new SmartContractsContractItem('7813', 'Transfer', 'bbdbcae72f1085710', 'SdrP9wvxZmaG7t3UAjxxyB6RNT9FV1Z2Sn', 14898025),
-      new SmartContractsContractItem('7814', 'Transfer', 'bbdbcae72f1085710', 'SdrP9wvxZmaG7t3UAjxxyB6RNT9FV1Z2Sn', 15898025),
-    ]);
+  public GetContracts(): Observable<SmartContractsContractItem[]> {
+    return this.GetHistory(this.currentWallet.walletName, this.currentAddress).pipe(map(items => {
+      const smartContracts = items.filter(item => item.type === ContractItemType.Create);
+      return smartContracts.map(create => {
+        return new SmartContractsContractItem(create.blockHeight.toFixed(), '', create.hash, create.to, create.amount);
+      });
+    }))
   }
 
   GetSenderAddresses(walletName: string): Observable<string[]> {

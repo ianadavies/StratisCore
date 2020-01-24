@@ -41,8 +41,6 @@ import { AddNodeComponent } from './advanced/components/add-node/add-node.compon
 import { TransactionDetailsModalComponent } from './transaction-details-modal/transaction-details-modal.component';
 import { AccountSidebarItem } from './side-bar-items/account-sidebar-item';
 import { GlobalService } from '@shared/services/global.service';
-import { SmartContractsComponent } from './smart-contracts/components/smart-contracts.component';
-import { TokensComponent } from './tokens/components/tokens.component';
 
 @NgModule({
   imports: [
@@ -132,14 +130,11 @@ export class WalletModule {
         'Smart Contracts', '/wallet/smart-contracts', ['side-bar-item-smart-contracts']));
 
       sidebarItems.registerSideBarItem(new SimpleSideBarItem(
-        'Contract Editor', '/wallet/contracts-editor', ['side-bar-item-contract-editor']));
-
+        'Contract Editor', '/wallet/contract-editor', ['side-bar-item-contract-editor']));
     }
 
     sidebarItems.registerSideBarItem(new SimpleSideBarItem(
       'Advanced', '/wallet/advanced', ['side-bar-item-advanced']));
-
-
 
     sidebarItems.setSelected({
       route: '/wallet/dashboard'

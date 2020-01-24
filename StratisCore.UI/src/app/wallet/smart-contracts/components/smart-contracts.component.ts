@@ -1,10 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { of, Subscription } from 'rxjs';
+import { Observable, of, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ClipboardService } from 'ngx-clipboard';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { ContractTransactionItem } from '../smart-contracts.service';
+import { ContractTransactionItem, SmartContractsContractItem } from '../smart-contracts.service';
 import { GlobalService } from '@shared/services/global.service';
 import { TransactionComponent, Mode } from './modals/transaction/transaction.component';
 import { ModalService } from '@shared/services/modal.service';
@@ -21,6 +21,7 @@ export class SmartContractsComponent implements OnInit, OnDestroy {
 
   private walletName = '';
   private subscriptions: Subscription[] = [];
+  public smartContracts : Observable<SmartContractsContractItem[]>;
   balance: number;
   selectedAddress: string;
   history: ContractTransactionItem[];
@@ -37,6 +38,7 @@ export class SmartContractsComponent implements OnInit, OnDestroy {
     this.coinUnit = this.globalService.getCoinUnit();
     this.walletName = this.globalService.getWalletName();
     this.selectedAddress = this.currentAccountService.address;
+    this.smartContracts = this.smartContractsService.GetContracts();
 
     this.subscriptions.push(this.walletService.wallet()
       .subscribe(balance => this.balance = balance.amountConfirmed));
@@ -48,32 +50,32 @@ export class SmartContractsComponent implements OnInit, OnDestroy {
       })).subscribe(history => this.history = history));
   }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
   }
 
-  ngOnDestroy(): void {
+  public ngOnDestroy(): void {
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
-  showApiError(error: string): void {
+  public showApiError(error: string): void {
     this.genericModalService.openModal('Error', error);
   }
 
-  clipboardAddressClicked(): void {
+  public clipboardAddressClicked(): void {
     if (this.selectedAddress && this.clipboardService.copyFromContent(this.selectedAddress)) {
       console.log(`Copied ${this.selectedAddress} to clipboard`);
     }
   }
 
-  callTransactionClicked(): void {
+  public callTransactionClicked(): void {
     this.showModal(Mode.Call);
   }
 
-  createNewTransactionClicked(): void {
+  public createNewTransactionClicked(): void {
     this.showModal(Mode.Create);
   }
 
-  showModal(mode: Mode): void {
+  public showModal(mode: Mode): void {
     const modal = this.modalService.open(TransactionComponent, {backdrop: 'static', keyboard: false});
     const transactionComponent = modal.componentInstance;
     transactionComponent.mode = mode;
@@ -82,7 +84,7 @@ export class SmartContractsComponent implements OnInit, OnDestroy {
     transactionComponent.coinUnit = this.coinUnit;
   }
 
-  txHashClicked(contract: ContractTransactionItem): void {
+  public txHashClicked(contract: ContractTransactionItem): void {
     console.log('txhash clicked');
     this.smartContractsService
       .GetReceipt(contract.hash)

@@ -22,7 +22,7 @@ export abstract class SmartContractsServiceBase {
     return of();
   }
 
-  GetContracts(walletName: string): Observable<SmartContractsContractItem[]> {
+  GetContracts(): Observable<SmartContractsContractItem[]> {
     return of();
   }
 

@@ -1,12 +1,12 @@
 <section id="GUI" class="light">
-  <section id="content" class="light smartcontracts col-10 mx-auto">
+  <section id="content" class="light smartcontracts">
     <section class="mb-3">
 
       <div class="col-12">
         <section class="row d-flex align-items-center">
 
           <div class="col-4">
-            <div class="card">
+            <div class="card card-flat">
               <div class="card-header">Address Balance</div>
               <div class="card-body d-flex align-items-center">
                 <p class="sub">
@@ -17,7 +17,7 @@
           </div>
 
           <div class="col-5">
-            <div class="card">
+            <div class="card card-flat">
               <div class="card-header">Active address</div>
               <div class="card-body d-flex align-items-center">
                 <div style="display: flex; flex-direction: row">
@@ -43,6 +43,33 @@
 
         </section>
       </div>
+    </section>
+
+    <section class="col-12">
+      <div class="row smart-contract-panel-row">
+        <ng-container *ngFor="let smartContract of (smartContracts | async)">
+          <div class="col-4 smart-contract-items">
+            <div class="card card-smart-contract mb-3" style="height: 300px;">
+              #{{smartContract.blockId}} -
+              {{smartContract.destinationAddress}}
+
+              <div class="contract-buttons">
+                <button type="button" class="btn btn-stratis-green btn-outline-light" data-toggle="modal"
+                        (click)="callTransactionClicked()">View Code
+                </button>
+                <button type="button" class="btn btn-stratis-green btn-outline-light" data-toggle="modal"
+                         (click)="callTransactionClicked()">Call Contract
+                </button>
+
+              </div>
+            </div>
+          </div>
+
+
+        </ng-container>
+      </div>
+
+
     </section>
 
     <section class="col-12">
