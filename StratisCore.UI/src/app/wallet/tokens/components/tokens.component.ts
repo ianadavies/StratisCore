@@ -20,12 +20,14 @@ import { TokensService } from '../services/tokens.service';
 import { AddTokenComponent } from './add-token/add-token.component';
 import { ProgressComponent } from './progress/progress.component';
 import { SendTokenComponent } from './send-token/send-token.component';
-import { SmartContractsServiceBase } from "../../smart-contracts/smart-contracts-service.base";
+import { SmartContractsServiceBase } from '../../smart-contracts/smart-contracts-service.base';
+import { Animations } from '@shared/animations/animations';
 
 @Component({
   selector: 'app-tokens',
   templateUrl: './tokens.component.html',
-  styleUrls: ['./tokens.component.scss']
+  styleUrls: ['./tokens.component.scss'],
+  animations: Animations.fadeIn
 })
 @Mixin([Disposable])
 export class TokensComponent implements OnInit, OnDestroy, Disposable {
@@ -43,7 +45,7 @@ export class TokensComponent implements OnInit, OnDestroy, Disposable {
   private pollingInterval = 5 * 1000; // polling milliseconds
   maxTimeout = 1.5 * 60 * 1000; // wait for about 1.5 minutes
   tokens: SavedToken[] = [];
-  tokenLoading: { [address: string]: string} = {};
+  tokenLoading: { [address: string]: string } = {};
 
   constructor(
     private tokenService: TokensService,
@@ -322,7 +324,9 @@ export class TokensComponent implements OnInit, OnDestroy, Disposable {
   }
 
   private updateTokenCollection(token: SavedToken): void {
-    if (!token) { return; }
+    if (!token) {
+      return;
+    }
 
     const existingTokenIndex = this.tokens.map(t => t.address).indexOf(token.address);
     if (existingTokenIndex >= 0) {

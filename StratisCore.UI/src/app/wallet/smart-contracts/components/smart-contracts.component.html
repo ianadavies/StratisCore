@@ -1,4 +1,4 @@
-<section id="GUI" class="light">
+<section id="GUI" class="light" @fadeIn>
   <section id="content" class="light smartcontracts">
     <section class="mb-3">
 
@@ -48,79 +48,90 @@
     <section class="col-12">
       <div class="row smart-contract-panel-row">
         <ng-container *ngFor="let smartContract of (smartContracts | async)">
-          <div class="col-4 smart-contract-items">
-            <div class="card card-smart-contract mb-3" style="height: 300px;">
-              #{{smartContract.blockId}} -
-              {{smartContract.destinationAddress}}
-
+          <div class="col-xl-4 col-lg-6 col-sm-12 smart-contract-items">
+            <div class="card card-smart-contract mb-3">
+              <div class="title">Address</div>
+              <div class="blockId">Block #{{smartContract.blockId}}</div>
+              <div class="address">{{smartContract.destinationAddress}}</div>
+              <div class="contract-data">
+                <ul>
+                  <li>
+                    <label>Amount</label>  {{smartContract.amount}}
+                  </li>
+                  <li>
+                    <label>Transaction Fee</label>
+                  </li>
+                  <li>
+                    <label>Gas Fee</label> 100
+                  </li>
+                </ul>
+              </div>
               <div class="contract-buttons">
                 <button type="button" class="btn btn-stratis-green btn-outline-light" data-toggle="modal"
-                        (click)="callTransactionClicked()">View Code
+                        (click)="viewCode(smartContract)">View Code
                 </button>
                 <button type="button" class="btn btn-stratis-green btn-outline-light" data-toggle="modal"
-                         (click)="callTransactionClicked()">Call Contract
+                        (click)="callContract(smartContract)">Call Contract
                 </button>
 
               </div>
             </div>
           </div>
-
-
         </ng-container>
       </div>
 
 
     </section>
 
-    <section class="col-12">
-      <div class="card my-4">
-        <div class="card-body">
-          <table class="table">
-            <thead>
-            <tr>
-              <th scope="col">Block</th>
-              <th scope="col">Type</th>
-              <th scope="col">Hash</th>
-              <th scope="col">Address</th>
-              <th scope="col">Amount</th>
-              <th scope="col">Transaction Fee</th>
-              <th scope="col">Gas Fee</th>
-              <th scope="col"></th>
-            </tr>
-            </thead>
-            <tbody>
+<!--    <section class="col-12">-->
+<!--      <div class="card my-4">-->
+<!--        <div class="card-body">-->
+<!--          <table class="table">-->
+<!--            <thead>-->
+<!--            <tr>-->
+<!--              <th scope="col">Block</th>-->
+<!--              <th scope="col">Type</th>-->
+<!--              <th scope="col">Hash</th>-->
+<!--              <th scope="col">Address</th>-->
+<!--              <th scope="col">Amount</th>-->
+<!--              <th scope="col">Transaction Fee</th>-->
+<!--              <th scope="col">Gas Fee</th>-->
+<!--              <th scope="col"></th>-->
+<!--            </tr>-->
+<!--            </thead>-->
+<!--            <tbody>-->
 
-            <tr *ngFor="let item of history">
-              <th scope="row"><strong>#{{item.blockHeight}}</strong></th>
-              <td><span class="badge badge-info">{{item.type | contractType}}</span></td>
-              <td>
-                <ng-container
-                  *ngIf="item.blockHeight && (item.type == 3 || item.type == 4); then clickableTxHash; else txHash">
-                </ng-container>
-                <ng-template #clickableTxHash>
-                  <a href="javascript:void(0);" (click)="txHashClicked(item)">{{item.hash}}</a>
-                </ng-template>
-                <ng-template #txHash>
-                  {{ item.hash }}
-                </ng-template>
-              </td>
-              <td><code class="d-inline-block">{{item.to}}</code></td>
-              <td>
-                <sc-balance [balance]="item.amount" [coinUnit]="coinUnit"></sc-balance>
-              </td>
-              <td>
-                <sc-balance [balance]="item.transactionFee" [coinUnit]="coinUnit"></sc-balance>
-              </td>
-              <td>
-                <sc-balance [balance]="item.gasFee" [coinUnit]="coinUnit"></sc-balance>
-              </td>
-              <td>&nbsp;</td>
-            </tr>
+<!--            <tr *ngFor="let item of history">-->
+<!--              <th scope="row"><strong>#{{item.blockHeight}}</strong></th>-->
+<!--              <td><span class="badge badge-info">{{item.type | contractType}}</span></td>-->
+<!--              <td>-->
+<!--                <ng-container-->
+<!--                  *ngIf="item.blockHeight && (item.type == 3 || item.type == 4); then clickableTxHash; else txHash">-->
+<!--                </ng-container>-->
+<!--                <ng-template #clickableTxHash>-->
+<!--                  <a href="javascript:void(0);" (click)="txHashClicked(item)">{{item.hash}}</a>-->
+<!--                </ng-template>-->
+<!--                <ng-template #txHash>-->
+<!--                  {{ item.hash }}-->
+<!--                </ng-template>-->
+<!--              </td>-->
+<!--              <td><code class="d-inline-block">{{item.to}}</code></td>-->
+<!--              <td>-->
+<!--                <sc-balance [balance]="item.amount" [coinUnit]="coinUnit"></sc-balance>-->
+<!--              </td>-->
+<!--              <td>-->
+<!--                <sc-balance [balance]="item.transactionFee" [coinUnit]="coinUnit"></sc-balance>-->
+<!--              </td>-->
+<!--              <td>-->
+<!--                <sc-balance [balance]="item.gasFee" [coinUnit]="coinUnit"></sc-balance>-->
+<!--              </td>-->
+<!--              <td>&nbsp;</td>-->
+<!--            </tr>-->
 
-            </tbody>
-          </table>
-        </div>
-      </div>
+<!--            </tbody>-->
+<!--          </table>-->
+<!--        </div>-->
+<!--      </div>-->
 
       <!-- <div class="float-right">
                 <nav aria-label="...">
@@ -136,6 +147,6 @@
                 </nav>
             </div> -->
 
-    </section>
+<!--    </section>-->
   </section>
 </section>

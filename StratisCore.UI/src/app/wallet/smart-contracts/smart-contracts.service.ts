@@ -18,6 +18,14 @@ export class SmartContractsContractItem {
   }
 }
 
+export interface SmartContractCode {
+  type: string;
+  bytecode: string;
+  csharp: string;
+  message: string;
+}
+
+
 export enum ContractItemType {
   Received = 0,
   Sent = 1,
@@ -149,6 +157,12 @@ export class SmartContractsService extends ApiService implements SmartContractsS
         return new SmartContractsContractItem(create.blockHeight.toFixed(), '', create.hash, create.to, create.amount);
       });
     }))
+  }
+
+  public GetCode(address: string) : Observable<SmartContractCode> {
+    return this.get(`smartcontracts/code?address=${address}`).pipe(
+      catchError(err => this.handleHttpError(err))
+    );
   }
 
   GetSenderAddresses(walletName: string): Observable<string[]> {

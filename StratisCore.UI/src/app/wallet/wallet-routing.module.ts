@@ -40,6 +40,7 @@ const routes: Routes = [
       {path: 'smart-contracts', component: SmartContractsComponent, canActivate: [AccountSelectedGuard]},
       {path: 'tokens', component: TokensComponent, canActivate: [AccountSelectedGuard]},
       {path: 'contract-editor', component: ContractEditorComponent, canActivate: [AccountSelectedGuard]},
+      {path: 'contract-editor/:address', component: ContractEditorComponent, canActivate: [AccountSelectedGuard]},
       {path: 'address-book', component: AddressBookComponent},
       {path: 'explorer', component: BlockExplorerComponent}
     ]

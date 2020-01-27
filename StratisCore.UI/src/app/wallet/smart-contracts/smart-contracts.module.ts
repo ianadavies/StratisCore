@@ -14,7 +14,9 @@ import { ContractTypePipe } from './components/contract-type.pipe';
 import { AddressSelectionComponent } from './components/address-selection/address-selection.component';
 import { SmartContractsServiceBase } from './smart-contracts-service.base';
 import { ContractEditorComponent } from './components/contract-editor/contract-editor.component';
-import { AngularMonacoEditorModule } from 'angular-monaco-editor';
+import { MonacoEditorModule, NGX_MONACO_EDITOR_CONFIG } from 'ngx-monaco-editor';
+import MonacoConfig from '@shared/monaco-config';
+import { HighlightModule, HIGHLIGHT_OPTIONS } from 'ngx-highlightjs';
 
 @NgModule({
   imports: [
@@ -24,10 +26,19 @@ import { AngularMonacoEditorModule } from 'angular-monaco-editor';
     FormsModule,
     ReactiveFormsModule,
     SharedModule,
-  //  AngularMonacoEditorModule.forRoot()
+    HighlightModule,
+    MonacoEditorModule.forRoot()
   ],
 
-  providers: [{provide: SmartContractsServiceBase, useClass: SmartContractsService}],
+
+  providers: [
+    {
+      provide: SmartContractsServiceBase, useClass: SmartContractsService
+    },
+    {
+      provide: NGX_MONACO_EDITOR_CONFIG, useValue: MonacoConfig
+    }
+  ],
   exports: [
     ScBalanceComponent
   ],
@@ -37,7 +48,8 @@ import { AngularMonacoEditorModule } from 'angular-monaco-editor';
     ScBalanceComponent,
     ContractTypePipe,
     AddressSelectionComponent,
-    ContractEditorComponent
+    ContractEditorComponent,
+
   ],
 
   entryComponents: [

@@ -1,1 +1,10 @@
-<!--<angular-monaco-editor class="customMonacoEditor" [options]="options" [(ngModel)]="code"> </angular-monaco-editor>-->
+<ng-container *ngIf="(smartContract | async);let _smartContract">
+  <div class="code-editor" @fadeIn>
+    Type :
+    <pre>{{_smartContract.type}}</pre>
+    Bytecode:
+    <pre>{{_smartContract.bytecode}}</pre>
+    <pre><code [highlight]="_smartContract.csharp" [lineNumbers]="true" [languages]="['C#']"></code></pre>
+  </div>
+</ng-container>
+<!--<ngx-monaco-editor [options]="options" [(ngModel)]="code"></ngx-monaco-editor>-->

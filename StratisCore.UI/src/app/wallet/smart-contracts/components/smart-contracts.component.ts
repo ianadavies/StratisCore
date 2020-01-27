@@ -10,30 +10,38 @@ import { TransactionComponent, Mode } from './modals/transaction/transaction.com
 import { ModalService } from '@shared/services/modal.service';
 import { CurrentAccountService } from '@shared/services/current-account.service';
 import { WalletService } from '@shared/services/wallet.service';
-import { SmartContractsServiceBase } from "../smart-contracts-service.base";
+import { SmartContractsServiceBase } from '../smart-contracts-service.base';
+import { Router } from '@angular/router';
+import { Animations } from '@shared/animations/animations';
+import { ResyncComponent } from '../../advanced/components/resync/resync.component';
+import { TaskBarService } from '@shared/services/task-bar-service';
 
 @Component({
   selector: 'app-smart-contracts',
   templateUrl: './smart-contracts.component.html',
-  styleUrls: ['./smart-contracts.component.scss']
+  styleUrls: ['./smart-contracts.component.scss'],
+  animations: Animations.fadeIn
 })
 export class SmartContractsComponent implements OnInit, OnDestroy {
 
   private walletName = '';
   private subscriptions: Subscription[] = [];
-  public smartContracts : Observable<SmartContractsContractItem[]>;
+  public smartContracts: Observable<SmartContractsContractItem[]>;
   balance: number;
   selectedAddress: string;
   history: ContractTransactionItem[];
   coinUnit: string;
 
-  constructor(private globalService: GlobalService,
-              private smartContractsService: SmartContractsServiceBase,
-              private walletService: WalletService,
-              private clipboardService: ClipboardService,
-              private modalService: NgbModal,
-              private genericModalService: ModalService,
-              private currentAccountService: CurrentAccountService) {
+  constructor(
+    private router: Router,
+    private globalService: GlobalService,
+    private smartContractsService: SmartContractsServiceBase,
+    private walletService: WalletService,
+    private clipboardService: ClipboardService,
+    private modalService: NgbModal,
+    private genericModalService: ModalService,
+    private taskBarService: TaskBarService,
+    private currentAccountService: CurrentAccountService) {
 
     this.coinUnit = this.globalService.getCoinUnit();
     this.walletName = this.globalService.getWalletName();
@@ -96,5 +104,25 @@ export class SmartContractsComponent implements OnInit, OnDestroy {
         error => {
           this.showApiError('Error retrieving receipt. ' + error);
         });
+  }
+
+  public viewCode(contract: SmartContractsContractItem): void {
+    this.router.navigateByUrl(`wallet/contract-editor/${contract.destinationAddress}`)
+  }
+
+  public callContract(contract: SmartContractsContractItem): void {
+    const data =
+      {
+        mode: Mode.Call,
+        selectedSenderAddress: this.selectedAddress,
+        balance: this.balance,
+        coinUnit: this.coinUnit
+      };
+
+    this.taskBarService.open(TransactionComponent, data, {
+      showCloseButton: true,
+      taskBarWidth: '800px',
+      title: `Call Contract`,
+    });
   }
 }
