@@ -2313,9 +2313,33 @@ app-task-bar {
 }
 
 .code-editor {
-  margin: 20px;
-  font-size: 0.9em;
-  background-color: whitesmoke;
+
+  .page-header {
+    height: 400px !important;
+  }
+
+  .selector {
+    text-transform: uppercase;
+    font-weight: 300;
+    font-size: 0.9em;
+
+    .bytecode {
+      background-color: #2E3439;
+      color: white;
+      width: 100%;
+      overflow: scroll;
+      height: 200px;
+      word-wrap: break-word;
+      font-size: 1em;
+    }
+  }
+
+  .code-view {
+    padding-top: 400px;
+    padding-left: 20px;
+    padding-right: 20px;
+    height: calc(100vh - 400px);
+  }
 }
 
 .card-smart-contract::after {

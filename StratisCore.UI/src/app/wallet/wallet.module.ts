@@ -119,8 +119,10 @@ export class WalletModule {
 
     sidebarItems.registerSideBarItem(stakingSidebarItem);
 
-    sidebarItems.registerSideBarItem(new SimpleSideBarItem(
-      'Contacts', '/wallet/address-book', ['side-bar-item-address']));
+    if (!globalService.getSidechainEnabled()) {
+      sidebarItems.registerSideBarItem(new SimpleSideBarItem(
+        'Contacts', '/wallet/address-book', ['side-bar-item-address']));
+    }
 
     if (globalService.getSidechainEnabled()) {
       sidebarItems.registerSideBarItem(new SimpleSideBarItem(

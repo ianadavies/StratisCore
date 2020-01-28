@@ -34,11 +34,13 @@ export class AddressBookService extends RestApi {
   }
 
   private getContacts(): void {
-    this.loading.next(true);
-    this.get<any>('addressBook').toPromise().then(result => {
-      this.contactsSubject.next(result.addresses);
-      this.loading.next(false);
-    });
+    if (!this.globalService.getSidechainEnabled()) {
+      this.loading.next(true);
+      this.get<any>('addressBook').toPromise().then(result => {
+        this.contactsSubject.next(result.addresses);
+        this.loading.next(false);
+      });
+    }
   }
 
   public addAddressBookAddress(item: AddressLabel): Promise<any> {

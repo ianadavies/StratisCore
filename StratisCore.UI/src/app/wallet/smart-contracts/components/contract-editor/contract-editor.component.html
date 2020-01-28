@@ -1,10 +1,36 @@
-<ng-container *ngIf="(smartContract | async);let _smartContract">
-  <div class="code-editor" @fadeIn>
-    Type :
-    <pre>{{_smartContract.type}}</pre>
-    Bytecode:
-    <pre>{{_smartContract.bytecode}}</pre>
-    <pre><code [highlight]="_smartContract.csharp" [lineNumbers]="true" [languages]="['C#']"></code></pre>
+<section id="GUI" class="light code-editor" @fadeIn>
+  <div class="jumbotron page-header">
+    <div class="text-left">
+      <h3>Code Editor</h3>
+    </div>
+    <div class="selector">
+      Select Contract
+      <select class="custom-select" #contract (change)="selectContract(contract.value)">
+        <option value="" disabled [selected]="!this.selectedContract">Select Contract</option>
+        <option
+          *ngFor="let scOption of (smartContracts | async)"
+          [value]="scOption.destinationAddress" [selected]="this.selectedContract == scOption.destinationAddress">
+          {{ scOption.blockId  }} ({{scOption.destinationAddress}})
+        </option>
+      </select>
+      <ng-container *ngIf="(smartContract | async);let _smartContract">
+        <div>
+          <div class="row col-12">Type : {{_smartContract.type}}</div>
+          Bytecode:
+          <div class="bytecode">
+            {{_smartContract.bytecode}}
+          </div>
+        </div>
+      </ng-container>
+    </div>
   </div>
-</ng-container>
-<!--<ngx-monaco-editor [options]="options" [(ngModel)]="code"></ngx-monaco-editor>-->
+
+  <ng-container *ngIf="(smartContract | async);let _smartContract">
+    <div class="code-view" style="padding-top: 400px" @fadeIn>
+      <pre><code [highlight]="_smartContract.csharp" [lineNumbers]="true" [languages]="['C#']"></code></pre>
+    </div>
+  </ng-container>
+</section>
+
+
+

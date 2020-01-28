@@ -10,8 +10,7 @@ import { SetupModule } from './setup/setup.module';
 import { WalletModule } from './wallet/wallet.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
-import { MonacoEditorModule, NGX_MONACO_EDITOR_CONFIG, NgxMonacoEditorConfig } from 'ngx-monaco-editor';
-import MonacoConfig from '@shared/monaco-config';
+import { CovalentCodeEditorModule } from '@covalent/code-editor';
 
 @NgModule({
   imports: [
@@ -23,7 +22,7 @@ import MonacoConfig from '@shared/monaco-config';
     WalletModule,
     AppRoutingModule,
     FormsModule,
-    MonacoEditorModule.forRoot()
+    CovalentCodeEditorModule
   ],
   declarations: [
     AppComponent,
@@ -33,9 +32,6 @@ import MonacoConfig from '@shared/monaco-config';
     {
       provide: HTTP_INTERCEPTORS, useClass: ApiInterceptor, multi: true
     },
-    {
-      provide: NGX_MONACO_EDITOR_CONFIG, useValue: MonacoConfig
-    }
   ],
   bootstrap: [AppComponent]
 })
